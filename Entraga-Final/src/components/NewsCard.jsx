@@ -15,7 +15,6 @@ const NewsCard = ({noticia}) => {
         rel='noopener noreferrer'
         >
         Leer mas 
-        {/* <img src="\public\icons\cursor-pointer-svgrepo-com.svg" alt="icono de mano" className='icono-mano' /> */}
         </a>
     </div>
   )
