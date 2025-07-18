@@ -38,7 +38,7 @@ body {
 
 footer {
   width: 100vw;
-  background: #181818;
+  background: #242424;
   color: #ffa500;
   font-size: 1rem;
   border-top: 1px solid #333;
@@ -403,13 +403,14 @@ transform: scale(0.98);
 }
 
 .lista-jugadores li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;  
   background: #232323;
   border-radius: 8px;
   margin-bottom: 0.7rem;
   padding: 0.8rem 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   box-shadow: 0 1px 4px #ffb34711;
   transition: background 0.2s;
 }
@@ -431,4 +432,120 @@ transform: scale(0.98);
 .lista-jugadores li button:hover {
   color: #ff4500;
   transform: scale(1.2);
+}
+
+.modal-form{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* fondo negro con opacidad */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+.modal-contenido-form {
+  background-color: rgba(20, 20, 20, 0.85);
+  padding: 25px 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #a0cfff;
+  
+}
+.modal-contenido-form p {
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+}
+.modal-contenido-form button {
+  margin: 0 8px;
+  padding: 8px 18px;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.25s ease;
+}
+
+.modal-contenido-form button:first-of-type {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.modal-contenido-form button:first-of-type:hover {
+  background-color: #c0392b;
+}
+
+
+.modal-contenido-form button:last-of-type {
+  background-color: #bdc3c7;
+  color: #2c3e50;
+}
+
+.modal-contenido-form button:last-of-type:hover {
+  background-color: #95a5a6;
+}
+
+/* Estilos para el contenedor */
+.nav-buttons-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  width: 100%;
+  padding: 10px 0;
+  background: #242424;
+}
+
+/* Estilos base para los botones */
+.nav-button {
+  padding: 12px 25px;
+  background-color: #242424;
+  color: #ffa500;
+  border: 2px solid ;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.nav-button {
+  border-radius: 8px;
+  transition: border-radius 0.4s;
+}
+
+.nav-button:hover {
+  animation: soft-bounce 0.5s;
+}
+
+@keyframes soft-bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+
+
+/* Efecto hover */
+.nav-button:hover {
+  background-color: #242424 !important;
+  transform: translateY(-3px);
+}
+
+/* Estilo para botón activo */
+.nav-button.active {
+  background-color: #242424 !important;
+  border-color: #ffcc00;
+  box-shadow: 0 0 10px rgba(83, 79, 70, 0.7);
 }
