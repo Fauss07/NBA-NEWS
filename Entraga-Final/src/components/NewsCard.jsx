@@ -1,20 +1,22 @@
 import React from 'react'
+import { capitalize } from "../utils/capitalize";
+
 const NewsCard = ({noticia}) => {
     const {title,description,url,source} = noticia;
     const logo = source?.name || "NBA"
   return (
     <div className='Cards'>
-      <h3>{title}</h3>
+      <h3>{capitalize(title)}</h3>
       <p>
-        {description}
+        {capitalize(description)}
         <br/>
-        Fuente:{logo}
+        Fuente: {capitalize(logo)}
     </p>
         <a href={url}
         target='_blank'
         rel='noopener noreferrer'
         >
-        Leer mas 
+        Leer más
         </a>
     </div>
   )

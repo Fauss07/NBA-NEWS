@@ -1,10 +1,9 @@
 import React from 'react'
 import NavButton from './NavButton'
-import EquipoIdeal from './Equipo-Ideal'
 
 const BotonNav = ({ currentPage, setCurrentPage }) => {
   return (
-    <div className='nav-buttons-container'>
+    <nav className='nav-buttons-container' style={{ position: "sticky", bottom: 0, zIndex: 10 }}>
       <NavButton 
         className="nav-button"
         label="Noticias"
@@ -24,12 +23,12 @@ const BotonNav = ({ currentPage, setCurrentPage }) => {
         onClick={() => setCurrentPage("equipos")}
       />
       <NavButton
-      className="nav-button"
-      label="Equipo Ideal"
-      isActive={currentPage === "equipo ideal"}
-      onClick={() => setCurrentPage("equipo ideal")}
+        className="nav-button"
+        label="Equipo Ideal"
+        isActive={currentPage === "equipo ideal"}
+        onClick={() => setCurrentPage("equipo ideal")}
       />
-    </div>
+    </nav>
   )
 }
 

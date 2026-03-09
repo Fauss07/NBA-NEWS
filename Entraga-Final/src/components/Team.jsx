@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { capitalize } from "../utils/capitalize";
 export default function Team({ equipo }) {
   const [abierto, setAbierto] = useState(false);
 
@@ -6,7 +7,7 @@ export default function Team({ equipo }) {
     <>
       <div className="team-card" onClick={() => setAbierto(true)}>
         <img src={equipo.logo} alt={equipo.nombre} className="team-logo" />
-        <h3>{equipo.nombre}</h3>
+        <h3>{capitalize(equipo.nombre)}</h3>
       </div>
 
       {abierto && (
@@ -22,7 +23,7 @@ export default function Team({ equipo }) {
             onClick={(e) => e.stopPropagation()}
           >
             <button className="cerrar" onClick={() => setAbierto(false)}>✖</button>
-            <h2>{equipo.nombre}</h2>
+            <h2>{capitalize(equipo.nombre)}</h2>
             <p>{equipo.descripcion}</p>
           </div>
         </div>

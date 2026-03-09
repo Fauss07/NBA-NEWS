@@ -1,8 +1,16 @@
 import { useState } from "react";
-/* agregar validaciones y mensajes de error */
+import { guardarEnLocal, obtenerDeLocal, eliminarDeLocal } from "../utils/localStorage";
+import { esSoloLetras } from "../utils/validaciones";
+import { mostrarMensaje } from "../utils/alerts"; 
+import { capitalize } from "../utils/capitalize";
+import Modal from "./Modal";
+import JugadorItem from "./JugadorItem";
+import FormJugador from "./FormJugador";
+import { MENSAJES } from "../utils/messages";
+
 export default function EquipoIdeal() {
   const [jugadores, setJugadores] = useState(
-    JSON.parse(localStorage.getItem("equipoIdeal")) || []
+    obtenerDeLocal("equipoIdeal") || []
   );
   const [nuevoJugador, setNuevoJugador] = useState({ nombre: "", equipo: "", posicion: "" });
   const [editando, setEditando] = useState(null);
@@ -10,8 +18,6 @@ export default function EquipoIdeal() {
   const [errores, setErrores] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [jugadorAEliminar, setJugadorAEliminar] = useState(null);
-
-  const soloLetras = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
 
   const validarCampos = () => {
     const nuevosErrores = {};
@@ -31,10 +37,6 @@ export default function EquipoIdeal() {
     setNuevoJugador({ ...nuevoJugador, [e.target.name]: e.target.value });
   };
 
-  const guardarLocal = (nuevaLista) => {
-    localStorage.setItem("equipoIdeal", JSON.stringify(nuevaLista));
-  };
-
   const agregarJugador = (e) => {
     e.preventDefault();
     const { nombre, equipo, posicion } = nuevoJugador;
@@ -42,38 +44,42 @@ export default function EquipoIdeal() {
     const erroresValidacion = validarCampos();
     if (Object.keys(erroresValidacion).length > 0) {
       setErrores(erroresValidacion);
-      setMensaje("Todos los campos son obligatorios");
+      mostrarMensaje(MENSAJES.camposObligatorios, "error");
       return;
     }
 
-    if (!soloLetras.test(nombre)) {
-      setMensaje("El nombre solo debe contener letras");
+    if (!esSoloLetras(nombre)) {
+      mostrarMensaje(MENSAJES.nombreSoloLetras, "error");
       return;
     }
 
-    if (!soloLetras.test(equipo)) {
-      setMensaje("El equipo solo debe contener letras");
+    if (!esSoloLetras(equipo)) {
+      mostrarMensaje(MENSAJES.equipoSoloLetras, "error");
       return;
     }
 
-    if (!soloLetras.test(posicion)) {
-      setMensaje("La posición solo debe contener letras");
+    if (!esSoloLetras(posicion)) {
+      mostrarMensaje(MENSAJES.posicionSoloLetras, "error");
       return;
     }
 
     const nuevaLista = [...jugadores, nuevoJugador];
     setJugadores(nuevaLista);
-    guardarLocal(nuevaLista);
+    guardarEnLocal("equipoIdeal", nuevaLista);
     setNuevoJugador({ nombre: "", equipo: "", posicion: "" });
-    setMensaje(""); // Limpiar mensaje
+    setMensaje("");
     setErrores({});
+    mostrarMensaje(MENSAJES.jugadorAgregado, "success"); 
   };
    const confirmarEliminacion = () => {
     const nuevaLista = jugadores.filter((_, i) => i !== jugadorAEliminar);
     setJugadores(nuevaLista);
-    guardarLocal(nuevaLista);
+    guardarEnLocal("equipoIdeal", nuevaLista);
+    if (nuevaLista.length === 0) {
+      eliminarDeLocal("equipoIdeal");
+    }
     setShowModal(false);
-    setJugadorAEliminar(null);
+    setJugadorAEliminar(null);  
   };
     const cancelarEliminacion = () => {
     setShowModal(false);
@@ -91,7 +97,7 @@ export default function EquipoIdeal() {
       i === editando ? nuevoJugador : jug
     );
     setJugadores(nuevaLista);
-    guardarLocal(nuevaLista);
+    guardarEnLocal("equipoIdeal",nuevaLista);
     setNuevoJugador({ nombre: "", equipo: "", posicion: "" });
     setEditando(null);
     setMensaje("");
@@ -100,56 +106,31 @@ export default function EquipoIdeal() {
 
   return (
     <div className="equipo-container">
-      <h2>Equipo Ideal</h2>
-
-      <form onSubmit={editando !== null ? guardarEdicion : agregarJugador}>
-        {mensaje && <p className="mensaje">{mensaje}</p>}
-        <input
-          type="text"
-          name="nombre"
-          placeholder="Nombre del jugador"
-          value={nuevoJugador.nombre}
-          onChange={manejarCambio}
-        />
-        {errores.nombre && <p className="error">{errores.nombre}</p>}
-        <input
-          type="text"
-          name="equipo"
-          placeholder="Equipo"
-          value={nuevoJugador.equipo}
-          onChange={manejarCambio}
-        />
-        {errores.equipo && <p className="error">{errores.equipo}</p>}
-        <input
-          type="text"
-          name="posicion"
-          placeholder="Posición"
-          value={nuevoJugador.posicion}
-          onChange={manejarCambio}
-        />
-        {errores.posicion && <p className="error">{errores.posicion}</p>}
-        <button type="submit">{editando !== null ? "Guardar" : "Agregar"}</button>
-      </form>
-
+      <h2>{capitalize("equipo ideal")}</h2>
+      <FormJugador
+        nuevoJugador={nuevoJugador}
+        manejarCambio={manejarCambio}
+        errores={errores}
+        mensaje={mensaje}
+        onSubmit={editando !== null ? guardarEdicion : agregarJugador}
+        editando={editando}
+      />
       <ul className="lista-jugadores">
         {jugadores.map((jug, index) => (
-          <li key={index}>
-            <strong>{jug.nombre}</strong>
-            {jug.equipo ? ` ${jug.equipo}` : ""}
-            {jug.posicion ? ` (${jug.posicion})` : ""}
-            <button onClick={() => empezarEdicion(index)}>✏️</button>
-            <button onClick={() => { setShowModal(true); setJugadorAEliminar(index); }}>🗑️</button>
-          </li>
+          <JugadorItem
+            key={index}
+            jug={jug}
+            onEditar={() => empezarEdicion(index)}
+            onEliminar={() => { setShowModal(true); setJugadorAEliminar(index); }}
+          />
         ))}
       </ul>
       {showModal && (
-        <div className="modal-form">
-          <div className="modal-contenido-form">
-            <p>¿Estás seguro que querés eliminar este jugador?</p>
-            <button onClick={confirmarEliminacion}>Aceptar</button>
-            <button onClick={cancelarEliminacion}>Cancelar</button>
-          </div>
-        </div>
+        <Modal abierto={showModal} onClose={cancelarEliminacion}>
+          <p>{MENSAJES.confirmacionEliminacion}</p>
+          <button onClick={confirmarEliminacion}>Aceptar</button>
+          <button onClick={cancelarEliminacion}>Cancelar</button>
+        </Modal>
       )}
     </div>
   );

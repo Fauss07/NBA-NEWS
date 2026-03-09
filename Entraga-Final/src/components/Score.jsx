@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Modal from "./Modal";
 export default function Scores() {
   const [partidoAbierto, setPartidoAbierto] = useState(null);
 
@@ -43,34 +44,22 @@ export default function Scores() {
           </div>
         ))}
       </div>
-
-      {/* Modal de detalles */}
-      {partidoAbierto && (
-        <div className="modal-overlay" onClick={() => setPartidoAbierto(null)}>
-          <div 
-            className="modal-content"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button className="cerrar" onClick={() => setPartidoAbierto(null)}>
-              ✖
-            </button>
-
-            <div className="score-display">
-              <span>{partidoAbierto.resultado}</span>
-            </div>
-
-            <div className="game-details">
-              <h3>Detalles del partido</h3>
-              <p>{partidoAbierto.detalles}</p>
-              <div className="stats">
-                <p>🏀 Máximo anotador: LeBron James (32 pts)</p>
-                <p>🔄 Mejor asistente: Stephen Curry (10 ast)</p>
-              </div>
-            </div>
+      <Modal abierto={!!partidoAbierto} onClose={() => setPartidoAbierto(null)}>
+        <button className="cerrar" onClick={() => setPartidoAbierto(null)}>
+          ✖
+        </button>
+        <div className="score-display">
+          <span>{partidoAbierto?.resultado}</span>
+        </div>
+        <div className="game-details">
+          <h3>Detalles del partido</h3>
+          <p>{partidoAbierto?.detalles}</p>
+          <div className="stats">
+            <p>🏀 Máximo anotador: LeBron James (32 pts)</p>
+            <p>🔄 Mejor asistente: Stephen Curry (10 ast)</p>
           </div>
         </div>
-      )}
+      </Modal>
     </div>
   );
 }
-  
